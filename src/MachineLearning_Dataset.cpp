@@ -114,7 +114,7 @@ bool Dataset<T>::read (const std::string &filename)
 			std::string line;
 			std::getline(in, line);
 
-			if (line.length() != 0 && line[0] == '#')
+			while (line.length() != 0 && line[0] == '#')
 			{
 				d.getTag() = line.substr(1);
 				std::getline(in, line);
@@ -146,6 +146,7 @@ bool Dataset<T>::read (const std::string &filename)
 		{
 			Data<T> &d = this->at(i);
 
+			d.getTag() = temp[i].getTag();
 			d.getClass() = temp[i].getClass();
 
 			if (d.size() < max_index) d.resize(max_index);
@@ -185,10 +186,12 @@ bool Dataset<T>::write (const std::string &filename)
 	}
 	else
 	{
+		out << "#" << size() << std::endl;
 		for (unsigned int i=0; i<size(); i++)
 		{
 			Data<T> &d = this->at(i);
 
+			out << "#" << i << std::endl;
 			out << "#" << d.getTag() << std::endl;
 			out << ((d.getClass() == 0) ? "0" : ((d.getClass() < 0) ? "-1" : "+1"));
 
